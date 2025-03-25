@@ -10,4 +10,4 @@ def startup():
 
 @app.get("/")
 def read_root():
-    return {"mensaje": "API BOST_HORARIOS funcionando ✅"}
+    return {"mensaje": "API BOST_HORARIOS funcionando "}
