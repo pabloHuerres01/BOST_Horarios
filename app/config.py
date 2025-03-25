@@ -1,0 +1,12 @@
+# app/config.py
+
+# Turnos
+HORAS_TURNO_MANANA = 8
+HORAS_TURNO_TARDE = 7
+
+# Objetivo mensual
+HORAS_OBJETIVO_MENSUALES = 140
+
+# Reglas de descanso
+MAX_DIAS_SEGUIDOS_TRABAJADOS = 7
+DIAS_DESCANSO_OBLIGATORIO = 2

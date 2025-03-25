@@ -1,7 +1,8 @@
-# app/MODELOS/models.py
+# app/modelos/models.py
 
 from sqlalchemy import Column, Integer, String
-from app.database import Base
+from app.database.database import Base
+
 
 class Puesto(Base):
     __tablename__ = "puestos"

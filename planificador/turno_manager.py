@@ -1,4 +1,4 @@
-from app.database import SessionLocal
+from app.database.database import SessionLocal
 from app.modelos.Empleados import Empleado
 from app.modelos.Dia import Dia
 from app.modelos.Turno import Turno
@@ -41,7 +41,7 @@ class TurnoManager:
 
         self.db.commit()
         self.compensador.compensar_horas(anio, mes)
-        print("✅ Turnos generados correctamente.")
+        print("Turnos generados correctamente.")
 
     def _obtener_dias_del_mes(self, anio, mes):
         return self.db.query(Dia).join(Mes).filter(Mes.anio == anio, Mes.mes == mes).all()

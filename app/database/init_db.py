@@ -1,4 +1,4 @@
-from app.database import Base, engine, SessionLocal
+from app.database.database import Base, engine, SessionLocal
 from app.modelos.Puestos import Puesto
 
 def init_db():

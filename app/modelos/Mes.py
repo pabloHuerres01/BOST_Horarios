@@ -1,5 +1,4 @@
 from sqlalchemy import UniqueConstraint, Column, Integer
-from sqlalchemy import Column, Integer, String
 from app.database.database import Base
 # ... Puesto y Empleado ya definidos arriba
 
