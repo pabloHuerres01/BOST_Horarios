@@ -1,6 +1,7 @@
 # planificador/restricciones.py
 from datetime import timedelta
 from app.modelos.Turno import Turno
+from app.modelos.Ausencias import Ausencia
 
 class Restricciones:
     def __init__(self, db):
@@ -14,6 +15,14 @@ class Restricciones:
 
         # Regla: no más de 7 días trabajados seguidos
         if self._dias_trabajados_consecutivos(empleado.id, dia.id) >= 7:
+            return False
+
+        # Regla: no trabajar si tiene ausencia
+        if self.db.query(Ausencia).filter_by(empleado_id=empleado.id, dia_id=dia.id).first():
+            return False
+
+        # Regla: no trabajar si está de baja
+        if empleado.de_baja:
             return False
 
         return True

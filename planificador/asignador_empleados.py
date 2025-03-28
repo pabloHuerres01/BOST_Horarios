@@ -9,7 +9,8 @@ class AsignadorEmpleados:
 
     def asignar_empleados(self, dia, turno_tipo, empleados):
         asignaciones = []
-        # ejemplo simple: seleccionar 1 L2 + 2 L1 para cada turno
+
+        # Filtramos según la relación real de puestos asignados
         l2 = [e for e in empleados if self._tiene_puesto(e, "L2")]
         l1 = [e for e in empleados if self._tiene_puesto(e, "L1")]
 
@@ -21,5 +22,4 @@ class AsignadorEmpleados:
         return asignaciones
 
     def _tiene_puesto(self, empleado, puesto_nombre):
-        # Aquí deberías comprobar si el empleado puede trabajar en ese puesto
-        return True
+        return any(p.nombre == puesto_nombre for p in empleado.puestos)

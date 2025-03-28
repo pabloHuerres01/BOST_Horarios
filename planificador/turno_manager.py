@@ -69,4 +69,4 @@ class TurnoManager:
 
     def _obtener_empleados_disponibles_en_dia(self, dia_id):
         subquery = self.db.query(Ausencia.empleado_id).filter_by(dia_id=dia_id).subquery()
-        return self.db.query(Empleado).filter(~Empleado.id.in_(subquery)).all()
+        return self.db.query(Empleado).filter(~Empleado.id.in_(subquery), Empleado.de_baja == False).all()
