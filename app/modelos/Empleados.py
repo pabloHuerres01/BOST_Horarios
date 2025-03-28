@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from app.database.database import Base
 from app.modelos.EmpleadoPuestos import empleado_puestos
-
+from app.modelos.Puestos import Puesto  
 
 from sqlalchemy import Boolean
 from sqlalchemy.orm import relationship

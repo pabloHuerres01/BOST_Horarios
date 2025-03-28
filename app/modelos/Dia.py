@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String
 from app.database.database import Base
-# ... Puesto, Empleado, Mes definidos arriba
+from app.modelos.Mes import Mes
 
 class Dia(Base):
     __tablename__ = "dias"
