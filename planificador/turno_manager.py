@@ -20,28 +20,29 @@ class TurnoManager:
         self.compensador = CompensadorHoras(self.db)
 
     def planificar_mes(self, anio: int, mes: int):
-        print(f"Generando turnos para {anio}-{mes:02}")
-        
-        dias_mes = self._obtener_dias_del_mes(anio, mes)
-        empleados = self._obtener_empleados()
+    print(f"Generando turnos para {anio}-{mes:02}")
+    self._generar_mes_y_dias_si_no_existen(anio, mes)  # <--- esta es la línea nueva
 
-        for dia in dias_mes:
-            for turno_tipo in ["mañana", "tarde"]:
-                empleados_turno = self.asignador.asignar_empleados(dia, turno_tipo, empleados)
+    dias_mes = self._obtener_dias_del_mes(anio, mes)
+    empleados = self._obtener_empleados()
 
-                for empleado, puesto in empleados_turno:
-                    if self.restricciones.es_valido(empleado, dia, turno_tipo):
-                        nuevo_turno = Turno(
-                            dia_id=dia.id,
-                            empleado_id=empleado.id,
-                            puesto_id=puesto.id,
-                            turno=turno_tipo
-                        )
-                        self.db.add(nuevo_turno)
+    for dia in dias_mes:
+        for turno_tipo in ["mañana", "tarde"]:
+            empleados_turno = self.asignador.asignar_empleados(dia, turno_tipo, empleados)
 
-        self.db.commit()
-        self.compensador.compensar_horas(anio, mes)
-        print("Turnos generados correctamente.")
+            for empleado, puesto in empleados_turno:
+                if self.restricciones.es_valido(empleado, dia, turno_tipo):
+                    nuevo_turno = Turno(
+                        dia_id=dia.id,
+                        empleado_id=empleado.id,
+                        puesto_id=puesto.id,
+                        turno=turno_tipo
+                    )
+                    self.db.add(nuevo_turno)
+
+    self.db.commit()
+    self.compensador.compensar_horas(anio, mes)
+    print("Turnos generados correctamente.")
 
     def _obtener_dias_del_mes(self, anio, mes):
         return self.db.query(Dia).join(Mes).filter(Mes.anio == anio, Mes.mes == mes).all()
