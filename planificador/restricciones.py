@@ -1,5 +1,4 @@
 # planificador/restricciones.py
-from datetime import timedelta
 from app.modelos.Turno import Turno
 from app.modelos.Ausencias import Ausencia
 
@@ -8,27 +7,31 @@ class Restricciones:
         self.db = db
 
     def es_valido(self, empleado, dia, turno_tipo):
-        # Regla: no puede haber turno mañana después de uno de tarde
-        turno_anterior = self._turno_dia_anterior(empleado.id, dia.id)
-        if turno_anterior == "tarde" and turno_tipo == "mañana":
-            return False
-
-        # Regla: no más de 7 días trabajados seguidos
-        if self._dias_trabajados_consecutivos(empleado.id, dia.id) >= 7:
-            return False
-
-        # Regla: no trabajar si tiene ausencia
-        if self.db.query(Ausencia).filter_by(empleado_id=empleado.id, dia_id=dia.id).first():
-            return False
-
-        # Regla: no trabajar si está de baja
+        # Regla 1: el empleado no debe estar de baja
         if empleado.de_baja:
+            return False
+
+        # Regla 2: no puede tener una ausencia registrada ese día
+        if self._tiene_ausencia(empleado.id, dia.id):
+            return False
+
+        # Regla 3: no puede tener turno de mañana si el día anterior trabajó de tarde
+        if self._turno_dia_anterior(empleado.id, dia.id) == "tarde" and turno_tipo == "mañana":
+            return False
+
+        # Regla 4: no puede trabajar más de 7 días consecutivos
+        if self._dias_trabajados_consecutivos(empleado.id, dia.id) >= 7:
             return False
 
         return True
 
+    def _tiene_ausencia(self, empleado_id, dia_id):
+        return self.db.query(Ausencia).filter_by(empleado_id=empleado_id, dia_id=dia_id).first() is not None
+
     def _turno_dia_anterior(self, empleado_id, dia_id):
         dia_anterior = dia_id - 1
+        if dia_anterior < 1:
+            return None
         turno = self.db.query(Turno).filter_by(dia_id=dia_anterior, empleado_id=empleado_id).first()
         return turno.turno if turno else None
 
